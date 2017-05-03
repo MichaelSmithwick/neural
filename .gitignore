@@ -6,6 +6,8 @@
 # Generated Files Directories
 obj
 bin
+doxy
+doxygen
 
 # Windows image file caches
 Thumbs.db
