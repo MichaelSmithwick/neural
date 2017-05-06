@@ -1,5 +1,6 @@
 #include "weight_in.h"
 
+using namespace din;
 
 weight_in::weight_in(){
    load(0,0,0);

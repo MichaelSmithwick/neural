@@ -1,6 +1,8 @@
 #ifndef _WEIGHT_IN_
 #define _WEIGHT_IN_
 
+namespace din{
+
 class weight_in{
 public:
    weight_in();
@@ -12,5 +14,6 @@ private:
    double _weight[3];
 };
 
+}
 
 #endif // _WEIGHT_IN_

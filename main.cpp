@@ -1,8 +1,11 @@
 /**
- * @title This application explores the working of a simple neural network.
- * This neural network is used to correlate sleep time and study time with test scores
+ * @file
+ * @brief This application explores the working of a simple neural network.
+ * @details This neural network is used to correlate sleep time and study time with test scores.
  *
  * @author Michael Smithwick
+ * @date  4May2017
+ * @copyright Copyright (c) by Michael Smithwick - All Rights Reserved
  */
 
 #include <iomanip>
@@ -14,26 +17,28 @@
 #include <ctime>
 #include <fstream>
 
+#include "version.h"
 #include "data_in.h"
 #include "weight_in.h"
 
 // Using Artificial Neural Network (ANN) for AI machine learning
 
-const double MAXSCORE=100.0;
-const int INLAYERSZ=2;
-const int OUTLAYERSZ=1;
-const int HIDDENLAYERSZ=3;
+const double MAXSCORE=100.0;  /**< Maximum test score, used for normalization */
+const int INLAYERSZ=2;        /**< Number of nodes (columns) in the input, in this case sleep and study */
+const int OUTLAYERSZ=1;       /**< Number of nodes (columns) in the output, test score in this case */
+const int HIDDENLAYERSZ=3;    /**< Number of nodes (columns) in the hidden layer */
 
+void banner();
 //double normalize(double value, const double maxvalue);
 double activationfunction(double value);
-double forward(std::array<double,3> &hidden, din::data_in d_in, std::array<weight_in,2> w_in);
+double forward(std::array<double,3> &hidden, din::data_in d_in, std::array<din::weight_in,2> w_in);
 double second_stage(std::array<double,3> &secondstage_out, std::array<std::array<double,3>,3> hidden_result, std::array<double,3> weight_out);
 
 int main()
 {
    std::array<din::data_in,3> d_in; // input data - object contains sleep & study hours
    std::array<double,3> m_out; // Test score to be correlated with sleep and study hours input
-   std::array<weight_in,2> w_in;
+   std::array<din::weight_in,2> w_in;
    std::array<double,3> hidden; // derived hidden values
    std::array<double,2> norm; // holds normalized values
    std::array<std::array<double,3>,3> hidden_result;
@@ -45,6 +50,7 @@ int main()
    int i;
    double _zz=100000.0;
 
+   banner();
    // 1rst parameter = sleep hours
    // 2nd parameter = study hours
    d_in[0].load(3.0,5.0);
@@ -132,7 +138,7 @@ double activationfunction(double value){
    return 1.0/(1.0+exp(-((value*20.0)-10.0)));
 }
 
-double forward(std::array<double,3> &hidden, din::data_in d_in, std::array<weight_in,2> w_in){
+double forward(std::array<double,3> &hidden, din::data_in d_in, std::array<din::weight_in,2> w_in){
    for(int i=0;i<HIDDENLAYERSZ;i++){
       hidden[i]=(d_in.n.sleep()*w_in[0][i])+(d_in.n.study()*w_in[1][i]);
    }
@@ -143,5 +149,20 @@ double second_stage(std::array<double,3> &secondstage_out, std::array<std::array
    for(int i=0;i<HIDDENLAYERSZ;i++)
       secondstage_out[i]=(hidden_result[i][0]*weight_out[0])+(hidden_result[i][1]*weight_out[1])+(hidden_result[i][2]*weight_out[2]);
    return 0.0;
+}
+
+/**
+ * @brief Displays program name, author, date, and version on the user interface
+ */
+void banner(){
+   std::cout<<"*****************************************"<<std::endl;
+   std::cout<<"**                                     **"<<std::endl;
+   std::cout<<"** application name:    neural         **"<<std::endl;
+   std::cout<<"** application author:  mike smithwick **"<<std::endl;
+   std::cout<<"** application date:    ";
+   std::cout<<AutoVersion::_ver_MONTH<<"/"<<AutoVersion::_ver_DATE<<"/"<<AutoVersion::_ver_YEAR<<"     **"<<std::endl;
+   std::cout<<"** application version: "<<AutoVersion::_ver_FULLVERSION_STRING<<"        **"<<std::endl;
+   std::cout<<"**                                     **"<<std::endl;
+   std::cout<<"*****************************************"<<std::endl;
 }
 
